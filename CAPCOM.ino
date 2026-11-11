@@ -1,3 +1,5 @@
+// Displays the lights
+
 const int NUM_PINS = 30;
 
 int pinNumbers[NUM_PINS];
