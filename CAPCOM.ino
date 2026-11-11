@@ -2,7 +2,7 @@ const int NUM_PINS = 30;
 
 int pinNumbers[NUM_PINS];
 int pinOffset = 22;
-int delayTime = 200;
+int delayTime = 100;
 int numberOfPinsToLight = 1;
 
 // Generates k distinct random integers between minVal and maxVal (inclusive)
@@ -29,6 +29,12 @@ void randomDistinct(int result[], int k, int minVal, int maxVal) {
   }
 }
 
+void turnOffAllLights(){
+  for (int i = 0; i < NUM_PINS; i++){
+    digitalWrite(pinNumbers[i], 0);
+  }
+}
+
 void setup() {
   for (int i = 0; i < NUM_PINS; i++){
     pinNumbers[i] = pinOffset + i;
@@ -37,24 +43,15 @@ void setup() {
 }
 
 void loop() {
-  // Initialize random pin states
-  int randPositions[numberOfPinsToLight];
-  randomDistinct(randPositions, numberOfPinsToLight, 22, 51);
-
-  for (int pn: randPositions) {
-    digitalWrite(pn, 1);
-  }
-
-  delay(delayTime);
-
-  // Shut off all lights (instant + no delay)
   for (int i = 0; i < NUM_PINS; i++) {
-    digitalWrite(pinNumbers[i], 0);
+    digitalWrite(pinNumbers[i], 1);
+    delay(delayTime);
+    turnOffAllLights();
+  }
+  for (int i = NUM_PINS - 1; i > 0; i--) {
+    digitalWrite(pinNumbers[i], 1);
+    delay(delayTime);
+    turnOffAllLights();
   }
 
-  if (numberOfPinsToLight < NUM_PINS) {
-    numberOfPinsToLight += 1;
-  }  else {
-    numberOfPinsToLight = 1;
-  }
 }
