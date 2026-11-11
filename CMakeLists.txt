@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.20)
+project(CAPCOM VERSION 0.1.0 LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+add_executable(capcom_sender src/main.cpp src/TelemetryServer.cpp src/TelemetryManager.cpp
+    src/collectors/CPUCollector.cpp src/collectors/MemoryCollector.cpp src/collectors/NetworkCollector.cpp
+    src/collectors/InputCounter.cpp src/collectors/MouseCollector.cpp src/collectors/KeyboardCollector.cpp)
+target_include_directories(capcom_sender PRIVATE include)
+target_compile_definitions(capcom_sender PRIVATE WIN32_LEAN_AND_MEAN NOMINMAX)
+target_link_libraries(capcom_sender PRIVATE ws2_32 iphlpapi user32)
+if(MSVC)
+    target_compile_options(capcom_sender PRIVATE /W4 /permissive-)
+else()
+    target_compile_options(capcom_sender PRIVATE -Wall -Wextra -Wpedantic)
+endif()
