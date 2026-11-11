@@ -5,3 +5,4 @@ build/
 build-api
 build-api-nmake
 build-vs
+build-api-formatted
