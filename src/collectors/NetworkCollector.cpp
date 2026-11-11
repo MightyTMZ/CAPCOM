@@ -11,7 +11,7 @@
 namespace {
 
 std::pair<uint64_t, uint64_t> getNetworkByteTotals() {
-    MIB_IF_TABLE2* table = nullptr;
+    MIB_IF_TABLE2 *table = nullptr;
     if (GetIfTable2(&table) != NO_ERROR) {
         throw std::runtime_error("GetIfTable2 failed");
     }
@@ -20,7 +20,7 @@ std::pair<uint64_t, uint64_t> getNetworkByteTotals() {
     uint64_t transmittedBytes = 0;
 
     for (ULONG index = 0; index < table->NumEntries; ++index) {
-        const MIB_IF_ROW2& row = table->Table[index];
+        const MIB_IF_ROW2 &row = table->Table[index];
         const bool isActive = row.OperStatus == IfOperStatusUp;
         const bool isLoopback = row.Type == IF_TYPE_SOFTWARE_LOOPBACK;
 
@@ -34,7 +34,7 @@ std::pair<uint64_t, uint64_t> getNetworkByteTotals() {
     return {receivedBytes, transmittedBytes};
 }
 
-}
+} // namespace
 
 namespace capcom {
 
@@ -46,21 +46,18 @@ void NetworkCollector::initialize() {
     initialized_ = true;
 }
 
-void NetworkCollector::sample(Telemetry& data) {
+void NetworkCollector::sample(Telemetry &data) {
     const auto now = std::chrono::steady_clock::now();
     const auto [receivedBytes, transmittedBytes] = getNetworkByteTotals();
 
     if (initialized_) {
-        const double elapsedSeconds =
-            std::chrono::duration<double>(now - previous_time_).count();
+        const double elapsedSeconds = std::chrono::duration<double>(now - previous_time_).count();
 
         if (elapsedSeconds > 0.0) {
             data.network_rx_bytes_per_sec =
-                static_cast<double>(receivedBytes - previous_rx_) /
-                elapsedSeconds;
+                static_cast<double>(receivedBytes - previous_rx_) / elapsedSeconds;
             data.network_tx_bytes_per_sec =
-                static_cast<double>(transmittedBytes - previous_tx_) /
-                elapsedSeconds;
+                static_cast<double>(transmittedBytes - previous_tx_) / elapsedSeconds;
         }
     }
 
@@ -70,4 +67,4 @@ void NetworkCollector::sample(Telemetry& data) {
     initialized_ = true;
 }
 
-}
+} // namespace capcom
