@@ -1,0 +1,7 @@
+.idea/
+cmake-build-debug/
+build/
+
+build-api
+build-api-nmake
+build-vs
