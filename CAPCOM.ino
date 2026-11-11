@@ -5,6 +5,8 @@ int pinOffset = 22;
 int delayTime = 100;
 int numberOfPinsToLight = 1;
 
+bool keepAllLightsOnAfter = true;
+
 // Generates k distinct random integers between minVal and maxVal (inclusive)
 void randomDistinct(int result[], int k, int minVal, int maxVal) {
   int n = maxVal - minVal + 1;
@@ -35,6 +37,12 @@ void turnOffAllLights(){
   }
 }
 
+void turnOnAllLights(){
+  for (int i = 0; i < NUM_PINS; i++){
+    digitalWrite(pinNumbers[i], 1);
+  }
+}
+
 void setup() {
   for (int i = 0; i < NUM_PINS; i++){
     pinNumbers[i] = pinOffset + i;
@@ -43,15 +51,19 @@ void setup() {
 }
 
 void loop() {
-  for (int i = 0; i < NUM_PINS; i++) {
-    digitalWrite(pinNumbers[i], 1);
-    delay(delayTime);
-    turnOffAllLights();
-  }
-  for (int i = NUM_PINS - 1; i > 0; i--) {
-    digitalWrite(pinNumbers[i], 1);
-    delay(delayTime);
-    turnOffAllLights();
+  while (delayTime > 20) {
+    for (int i = 0; i < NUM_PINS; i++) {
+      digitalWrite(pinNumbers[i], 1);
+      delay(delayTime);
+      turnOffAllLights();
+    }
+    for (int i = NUM_PINS - 1; i > 0; i--) {
+      digitalWrite(pinNumbers[i], 1);
+      delay(delayTime);
+      turnOffAllLights();
+    }
+    delayTime -= 20;
   }
 
+  while(keepAllLightsOnAfter) {turnOnAllLights();}
 }
